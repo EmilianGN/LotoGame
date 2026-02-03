@@ -1,0 +1,13 @@
+#ignore tests
+test*.*
+
+#ignore .bak files
+*.bak
+
+#ignore other files or folders
+__pycache__/
+.idea/
+.venv/
+
+#ignore sqlite3 db files
+*.db
