@@ -1,13 +1,18 @@
 from random import randint
+from xml.etree.ElementTree import tostring
 
 from faker import Faker
 
 
 class Jucator:
-    def __init__(self):
-        fake = Faker()
-        self.nume = fake.name()
-        self.numere = Jucator.alege_numere(0)
+    def __init__(self,nume=None,numere=None):
+        if nume is None and numere is None:
+            fake = Faker()
+            self.nume = fake.name()
+            self.numere = Jucator.alege_numere(0)
+        else:
+            self.nume = nume
+            self.numere = numere
     @staticmethod
     def alege_numere(ii_jucator=1):
         '''
@@ -17,7 +22,8 @@ class Jucator:
         '''
 
         numere_alese = set()
-        print(f"Alege 6 numere")
+        if ii_jucator:
+            print(f"Alege 6 numere")
         while len(numere_alese) < 6:
             interval=False
             while not interval:
@@ -25,7 +31,6 @@ class Jucator:
                 while not e_numar:
                     try:
                         if ii_jucator:
-
                             numar_ales = int(input("Introdu un numar: \n"))
                         else:
                             numar_ales = randint(1,49)
@@ -52,9 +57,19 @@ class Jucatori:
             Jucatori.lista_jucatori.append(un_jucator)
 
 
-# jucatori = Jucatori(3)
-# for jucator in (jucatori.lista_jucatori):
-#     print(f"{jucator.numere}   {jucator.nume}")
+class Castigator(Jucator):
+    def __init__(self,categorie=0,numere_ghicite=None,suma=0,nume=None,numere=None):
+        super().__init__(nume,numere)
+        self.categorie=categorie
+        self.numere_ghicite=numere_ghicite
+        self.suma=suma
 
-# for i in range(len(jucatori.lista_jucatori)):
-#     print(f"{jucatori.lista_jucatori[i].numere}   {jucatori.lista_jucatori[i].nume}")
+    def __repr__(self):
+        scris = (f"{self.nume:<25s} Numere {str(self.numere):<27s}"
+                 f" Ghicite {str(self.numere_ghicite):<27} Cat:{self.categorie:<2}"
+                 f" Castig:{self.suma}")
+        return  scris
+
+class ListaCastigatori:
+    def __init__(self):
+        self.lista_castigatori=list()

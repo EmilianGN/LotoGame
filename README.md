@@ -1,2 +1,2 @@
-# LotoGame
-Loto Game in Python
+# Joc Loto
+Joc Loto in Python
