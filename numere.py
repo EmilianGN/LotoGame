@@ -3,6 +3,9 @@ from random import randint
 
 
 class Numere:
+    '''
+    Clasa care genereaza numerele extrase si le salveaza intr-un set
+    '''
     numbers = list(range(1, 50))
     numere_extrase = set()
     @classmethod

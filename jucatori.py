@@ -18,7 +18,7 @@ class Jucator:
         '''
 
         :param ii_jucator: 1jucator 0cpu
-        :return:
+        :return: numere_alese
         '''
 
         numere_alese = set()
@@ -40,12 +40,8 @@ class Jucator:
                 if numar_ales > 0 and numar_ales <50:
                     interval=True
                     numere_alese.add(numar_ales)
-
                 else:
                     print("Alege un numar intre 1 si 49")
-
-
-
         return numere_alese
 
 class Jucatori:

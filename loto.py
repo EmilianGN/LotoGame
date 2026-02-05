@@ -1,4 +1,5 @@
 import sqlite3
+from pprint import pprint
 from statistics import correlation
 
 from numere import Numere
@@ -44,22 +45,22 @@ class JocDeNoroc(Loto):
         """
         ConexiuneSql.sql_query("baza_de_date.db", tabel_rezultate, tabel_db, True)
     @staticmethod
-    def porneste_jocul(nume,procent_buget,ii_jucator=1):
+    def desfasurare_joc(nume, procent_buget, nr_participanti =50, ii_jucator=1):
+        '''
+
+        :param nume:
+        :param procent_buget:
+        :param ii_jucator: 1 for CPU , 0 for UserInput
+        :return: lista_castogatori
+        '''
         joc = JocDeNoroc(nume, procent_buget)
-        jucatori = Jucatori(550)
+        jucatori = Jucatori(nr_participanti)
         if ii_jucator:
             nume_ales = input("Cu ce nume doresti sa te inregistrezi?\n")
             numere_jucator = Jucator.alege_numere(ii_jucator)
             jucatori.lista_jucatori.append(Jucator(nume_ales,numere_jucator))
             print(f"{numere_jucator}{nume_ales} ")
 
-        # numerere_extrase = Numere.extragere()
-        # print(numerere_extrase)
-        # numere_ghicite = numerere_extrase.intersection(numere_jucator)
-
-
-        # print(numere_ghicite)
-        # print(f"Ai castigat {joc.castiguri(numere_ghicite)}")
         lista_castigatori = ListaCastigatori()
         for n_jucator in (jucatori.lista_jucatori):
             n_numere_ghicite = joc.numere_castigatoare.intersection(n_jucator.numere)
@@ -78,19 +79,20 @@ class JocDeNoroc(Loto):
                 JocDeNoroc.initializare_db("baza_de_date.db")
                 ConexiuneSql.sql_query("baza_de_date.db", query_insert, "Jucatori")
 
-            # print(f"{n_jucator.numere}   {n_jucator.nume}")
-            # print(n_numere_ghicite)
             cat = joc.categorie(n_numere_ghicite)
             if len(n_numere_ghicite) > 2:
                 lista_castigatori.lista_castigatori.append(Castigator(cat,n_numere_ghicite,nume=n_jucator.nume,
                                                                   numere=n_jucator.numere))
-            # if cat is not None:
-            #     if cat > 0 and cat < 5 :
-            #         print(f"{n_jucator.numere}{n_jucator.nume}{n_numere_ghicite}Categoria de castig: {joc.categorie(n_numere_ghicite)}")
+
         return lista_castigatori , joc
 
     @staticmethod
     def categorie(numere_ghicite):
+        '''
+        Stabilire categorie de castig
+        :param numere_ghicite:
+        :return:
+        '''
 
         if len(numere_ghicite)==6:
             return 1
@@ -145,10 +147,17 @@ class JocDeNoroc(Loto):
                 JocDeNoroc.initializare_db("baza_de_date.db")
                 ConexiuneSql.sql_query("baza_de_date.db", query_insert, "Rezultate")
 
-(castigatori, joc) = JocDeNoroc.porneste_jocul("6/49", 0.4, 0)
-castigatori = joc.calcul_castiguri(castigatori)
+    @staticmethod
+    def start_joc(nr_participanti,ii_jucator):
+        (castigatori, joc) = JocDeNoroc.desfasurare_joc("6/49", 0.4,nr_participanti, ii_jucator)
+        castigatori = joc.calcul_castiguri(castigatori)
 
-print(f"Numere extrase 6/49       ****** {joc.numere_castigatoare} ******")
-for castigator in castigatori.lista_castigatori:
-    print(castigator)
-joc.salveaza_castigatori(castigatori)
+        print(f"Numere extrase 6/49       ****** {joc.numere_castigatoare} ******")
+        for castigator in castigatori.lista_castigatori:
+            print(castigator)
+        joc.salveaza_castigatori(castigatori)
+        # result = ConexiuneSql.sql_query_result("baza_de_date.db","SELECT *FROM Rezultate")
+        # pprint(result)
+
+JocDeNoroc.start_joc(550,0)
+
